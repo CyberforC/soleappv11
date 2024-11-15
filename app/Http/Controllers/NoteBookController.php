@@ -2,19 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Models\Author;
+use App\Models\Book;
 use App\Models\Note;
+use Illuminate\Http\Request;
 
-class NoteAuthorController extends Controller
+class NoteBookController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index($id)
     {
-        $author = Author::findOrFail($id);
-        return response()->json(['author' => $author, 'notes' => $author->note()->where('user_id', '=', auth()->user()->id)->get()]);
+        $book = Book::findOrFail($id);
+        return response()->json(['book' => $book, 'notes' => $book->note()->where('user_id', '=', auth()->user()->id)->get()]);
     }
 
     /**
@@ -25,21 +25,17 @@ class NoteAuthorController extends Controller
         $validated = $request->validate([
             'description' => 'required|min:5',
             'writing_date' => 'date|date_format:Y-m-d',
-            'author.id' => 'required|integer|exists:authors,id',
+            'book.id' => 'required|integer|exists:books,id',
             'user.id' => 'required|integer|exists:users,id'
         ]);
 
         try
         {
-            $author = Author::findOrFail($request->author['id']);
-            $author->note()->create([
-                                        'description' => $request->description,
-                                        'writing_date' => $request->writing_date,
-                                        'user_id' => $request->user['id']
-                                    ]);
-            return response()->json(['status' => true, 'message' => 'La nota del autor '.$author->full_name.' fue creado exitosamente']);
+            $book = Book::findOrFail($request->book['id']);
+            $book->note()->create(['description' => $request->description, 'writing_date' => $request->writing_date, 'user_id' => $request->user['id']]);
+            return response()->json(['status' => true, 'message' => 'La nota del libro '.$book->title.' fue creada exitosamente']);
         }
-        catch (\Exception $exc)
+        catch(\Exception $exc)
         {
             return response()->json(['status' => false, 'message' => 'Error al crear el registro. '.$exc]);
         }
@@ -50,10 +46,8 @@ class NoteAuthorController extends Controller
      */
     public function show($id)
     {
-        //$note = Note::find($id)->where('noteable_type', '=', 'App\Models\Author')->get();
-        //$note = Note::find($id);
-        //$note = Note::where('noteable_type', '=', 'App\Models\Author')->get();
-        $note = Note::where('noteable_type', '=', 'App\Models\Author')->where('id', '=', $id)->get();
+        $note = Note::find($id);
+        /*$this->authorize('MyNote', $note);*/
         return response()->json($note);
     }
 
@@ -65,7 +59,7 @@ class NoteAuthorController extends Controller
         $validated = $request->validate([
             'description' => 'required|min:5',
             'writing_date' => 'date|date_format:Y-m-d',
-            'author.id' => 'required|integer|exists:authors,id',
+            'book.id' => 'required|integer|exists:books,id',
             'user.id' => 'required|integer|exists:users,id'
         ]);
 
@@ -75,11 +69,12 @@ class NoteAuthorController extends Controller
             $note->description = $request->description;
             $note->writing_date = $request->writing_date;
             $note->save();
-            return response()->json(['status' => true, 'message' => 'La nota del autor '.$request->author['full_name'].' fue actualizada exitosamente']);
+            //return response()->json(['status' => true, 'message' => 'La nota del libro '.$request->book['title'].' fue actualizado exitosamente']);
+            return response()->json(['status' => true, 'message' => 'La nota del libro '.$request->book['id'].' fue actualizada exitosamente']);
         }
         catch(\Exception $exc)
         {
-            return response()->json(['status' => false, 'message' => 'Error al editar el registro']);
+            return response()->json(['status' => false, 'message' => 'Error al editar el registro. '.$exc]);
         }
     }
 
@@ -94,7 +89,7 @@ class NoteAuthorController extends Controller
             $note->delete();
             return response()->json(['status' => true, 'message' => 'La nota fue eliminada exitosamente']);
         }
-        catch (\Exception $exc)
+        catch(\Exception $exc)
         {
             return response()->json(['status' => false, 'message' => 'Error al eliminar el registro. '.$exc]);
         }
