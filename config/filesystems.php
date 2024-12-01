@@ -25,17 +25,25 @@ return [
     | most supported storage drivers are configured here for reference.
     |
     | Supported drivers: "local", "ftp", "sftp", "s3"
-    |
-    */
 
-    'disks' => [
-
-        'local' => [
+    'local' => [
             'driver' => 'local',
             'root' => storage_path('app/private'),
             'serve' => true,
             'throw' => false,
         ],
+
+    |
+    */
+
+    'disks' => [
+
+        /*'local' => [
+            'driver' => 'local',
+            'root' => storage_path('app/private'),
+            'serve' => true,
+            'throw' => false,
+        ],*/
 
         'public' => [
             'driver' => 'local',
@@ -67,6 +75,8 @@ return [
     | Here you may configure the symbolic links that will be created when the
     | `storage:link` Artisan command is executed. The array keys should be
     | the locations of the links and the values should be their targets.
+    |   public_path('storage') => storage_path('app/private/public/images'),
+    |   public_path('storage') => storage_path('app/public/images'),
     |
     */
 

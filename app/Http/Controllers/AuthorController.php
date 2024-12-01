@@ -116,7 +116,7 @@ class AuthorController extends Controller
             {
                 $author->image()->delete();
             }
-            return response()->json(['status' => true, 'message' => 'El autor '.$author->full_name.' fue eliinado exitosamente']);
+            return response()->json(['status' => true, 'message' => 'El autor '.$author->full_name.' fue eliminado exitosamente']);
         }
         catch (\Exception $exc)
         {

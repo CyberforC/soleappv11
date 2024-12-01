@@ -51,9 +51,10 @@ class NoteAuthorController extends Controller
     public function show($id)
     {
         //$note = Note::find($id)->where('noteable_type', '=', 'App\Models\Author')->get();
-        //$note = Note::find($id);
+        $note = Note::find($id);
         //$note = Note::where('noteable_type', '=', 'App\Models\Author')->get();
-        $note = Note::where('noteable_type', '=', 'App\Models\Author')->where('id', '=', $id)->get();
+        // This is a good instruction
+        //$note = Note::where('noteable_type', '=', 'App\Models\Author')->where('id', '=', $id)->get();
         return response()->json($note);
     }
 

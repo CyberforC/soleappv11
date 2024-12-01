@@ -14,7 +14,8 @@ return new class extends Migration
         Schema::create('notes', function (Blueprint $table) {
             $table->id();
             $table->text('description')->fulltext();
-            $table->dateTime('writing_date');
+            //$table->dateTime('writing_date');
+            $table->date('writing_date');
             $table->unsignedBigInteger('noteable_id');
             $table->string('noteable_type');
             $table->unsignedBigInteger('user_id')->nullable();
